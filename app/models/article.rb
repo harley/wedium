@@ -8,4 +8,8 @@ class Article < ActiveRecord::Base
   def tag_list
     ["a", "b"]
   end
+
+  before_validation do
+    self.slug = "#{title.to_s.parameterize}-#{SecureRandom.uuid.gsub('-','')}"
+  end
 end
