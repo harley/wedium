@@ -1,7 +1,6 @@
 class Article < ActiveRecord::Base
   belongs_to :author
-
-  scope :authored_by, ->(username) { joins(:author).where({ authors: { username: username }}) }
+  extend Scopes
 
   def tag_list
     ["a", "b"]
