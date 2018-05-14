@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20180511045226) do
     t.text     "body",            limit: 65535
     t.string   "description",     limit: 255
     t.boolean  "favorited",                     default: false
-    t.integer  "favorites_count", limit: 4
+    t.integer  "favorites_count", limit: 4,     default: 0
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
   end

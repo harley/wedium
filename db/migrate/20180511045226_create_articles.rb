@@ -6,7 +6,7 @@ class CreateArticles < ActiveRecord::Migration
       t.text :body
       t.string :description
       t.boolean :favorited, default: false
-      t.integer :favorites_count
+      t.integer :favorites_count, default: 0
 
       t.timestamps null: false
     end
