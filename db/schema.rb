@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180511045226) do
+ActiveRecord::Schema.define(version: 20180514001402) do
 
   create_table "articles", force: :cascade do |t|
     t.string   "title",           limit: 255
@@ -22,6 +22,19 @@ ActiveRecord::Schema.define(version: 20180511045226) do
     t.integer  "favorites_count", limit: 4,     default: 0
     t.datetime "created_at",                                    null: false
     t.datetime "updated_at",                                    null: false
+    t.integer  "author_id",       limit: 4
   end
 
+  add_index "articles", ["author_id"], name: "index_articles_on_author_id", using: :btree
+
+  create_table "authors", force: :cascade do |t|
+    t.string   "username",   limit: 255
+    t.string   "bio",        limit: 255
+    t.string   "image",      limit: 255
+    t.boolean  "following",              default: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_foreign_key "articles", "authors"
 end
