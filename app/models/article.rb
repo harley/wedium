@@ -1,4 +1,5 @@
 class Article < ActiveRecord::Base
+  has_many :favorites, dependent: :destroy
   belongs_to :author
 
   extend Scopes
