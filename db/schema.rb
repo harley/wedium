@@ -51,7 +51,6 @@ ActiveRecord::Schema.define(version: 20180625051833) do
     t.string   "email",           limit: 255
     t.string   "bio",             limit: 255
     t.string   "image",           limit: 255
-    t.string   "token",           limit: 255
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.string   "password_digest", limit: 255

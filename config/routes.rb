@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  post 'users/login' => 'sessions#create'
+
   resources :users, only: [:create]
   resources :articles
 

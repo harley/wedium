@@ -3,6 +3,10 @@ class User < ActiveRecord::Base
 
   has_secure_password
 
+  def token
+    self.class.generate_jwt(id)
+  end
+
   def self.generate_jwt(user_id)
     JWT.encode({ id: user_id, exp: 60.days.from_now.to_i },
       Rails.application.secrets.secret_key_base)
