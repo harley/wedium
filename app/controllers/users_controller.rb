@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     if current_user
       render 'current', locals: { user: current_user }
     else
-      render json: {error: "Not authenticated."}
+      render json: {error: "Not authenticated."}, status: 400
     end
   end
 
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
   end
 
   def current_user
-    @current_user ||= User.find_by(id: @current_user_id)
+    @current_user ||= User.find(@current_user_id)
   end
 
   # docs https://apidock.com/rails/ActionController/HttpAuthentication/Token/ControllerMethods/authenticate_or_request_with_http_token
@@ -49,7 +49,7 @@ class UsersController < ApplicationController
       authenticate_with_http_token do |token|
         begin
           jwt_payload = JWT.decode(token, Rails.application.secrets.secret_key_base).first
-          p "JWT payload: #{jwt_payload}"
+          # p "JWT payload: #{jwt_payload}"
           @current_user_id = jwt_payload['id']
         rescue JWT::VerificationError => e
           render json: {error: "Error: #{e.message}"}, status: 400
