@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'user' => 'users#current'
+  put 'user' => 'users#update_current'
+
   post 'users/login' => 'sessions#create'
 
   resources :users, only: [:create]
