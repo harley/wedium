@@ -1,11 +1,11 @@
 class Article
   module Scopes
     def authored_by(username)
-      joins(:author).where({ authors: { username: username }})
+      joins(:user).where(users: { username: username })
     end
 
     def favorited_by(username)
-      joins(:favorites).where(favorites: { user: User.where(username: username) })
+      joins(:favorites).where(favorites: { user: User.find_by(username: username) })
     end
   end
 end

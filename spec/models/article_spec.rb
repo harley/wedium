@@ -9,8 +9,8 @@ RSpec.describe Article, type: :model do
 
   describe '.authored_by' do
     it 'returns only articles by john' do
-      john = Author.create! username: 'john'
-      article = Article.create! author: john, title: 'first tile'
+      john = User.create! username: 'john', email: 'john@example.com', password: 'password'
+      article = Article.create! user: john, title: 'first tile'
       Article.create! title: 'not by john'
 
       expect(Article.authored_by(john.username)).to eq [article]

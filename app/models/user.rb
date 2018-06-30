@@ -1,5 +1,7 @@
 class User < ActiveRecord::Base
   validates :email, :username, uniqueness: true
+  validates :username, presence: true, allow_blank: false
+  has_many :articles, dependent: :destroy
 
   has_secure_password
 
@@ -8,8 +10,7 @@ class User < ActiveRecord::Base
   end
 
   def self.generate_jwt(user_id)
-    JWT.encode({ id: user_id, exp: 60.days.from_now.to_i },
-      Rails.application.secrets.secret_key_base)
+    JWT.encode( { id: user_id, exp: 60.days.from_now.to_i }, Rails.application.secrets.secret_key_base)
   end
 
   def self.decode_jwt(token)
