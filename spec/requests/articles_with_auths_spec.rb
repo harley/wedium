@@ -1,14 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe 'ArticlesWithAuths', type: :request do
+  let(:user) { User.create!(username: 'adam', email: 'a@example.com', password: 'password') }
+  let(:auth_token) { user.token }
+  let(:valid_user_headers) { { 'Authorization' => "Token #{auth_token}" } }
+
   describe 'POST Create Article' do
-    before do
-      @adam = User.create(username: 'adam', email: 'a@example.com', password: 'password')
-      @token = @adam.token
-      @valid_headers = {
-        'Authorization' => "Token #{@token}"
-      }
-      @article_params = {
+    it 'creates an article' do
+      article_params = {
         'article': {
           'title': 'How to train your dragon',
           'description': 'Ever wonder how?',
@@ -16,10 +15,7 @@ RSpec.describe 'ArticlesWithAuths', type: :request do
           'tagList': ['dragons','training']
         }
       }
-    end
-
-    it 'creates an article' do
-      post '/articles', @article_params, @valid_headers
+      post '/articles', article_params, valid_user_headers
       expect(response).to have_http_status(200)
       article = json['article']
       expect(article['title']).to eq 'How to train your dragon'
@@ -37,24 +33,31 @@ RSpec.describe 'ArticlesWithAuths', type: :request do
   end
 
   describe 'DEL Delete Article' do
-    before do
-      @adam = User.create(username: 'adam', email: 'a@example.com', password: 'password')
-      @token = @adam.token
-      @valid_headers = {
-        'Authorization' => "Token #{@token}"
-      }
-    end
-
     it 'deletes how-to-train-your-dragon article' do
       Article.create!(
-        user: @adam,
+        user: user,
         title: 'How to train your dragon',
         description: 'Ever wonder how?',
         body: 'Very carefully.'
       )
-      delete '/articles/how-to-train-your-dragon', {}, @valid_headers
+      delete '/articles/how-to-train-your-dragon', {}, valid_user_headers
       expect(response).to have_http_status(200)
       expect(Article.count).to eq 0
+    end
+  end
+
+  describe 'PUT Update Article' do
+    it 'updates how-to-train-your-dragon article' do
+      Article.create!(
+        user: user,
+        title: 'How to train your dragon',
+        description: 'Ever wonder how?',
+        body: 'Very carefully.'
+      )
+      updated_content = { article: { body: 'With two hands!!' } }
+      put '/articles/how-to-train-your-dragon', updated_content, valid_user_headers
+      expect(response).to have_http_status(200)
+      expect(json['article']['body']).to eq 'With two hands!!'
     end
   end
 end

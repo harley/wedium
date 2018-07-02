@@ -14,7 +14,16 @@ class ArticlesController < ApplicationController
   def create
     article = current_user.articles.build(article_params)
     if article.save
-      render 'create', locals: { article: article }
+      render '_article', locals: { article: article }
+    else
+      render json: { error: "Error: #{article.errors.full_messages.to_sentence}"}
+    end
+  end
+
+  def update
+    article = current_user.articles.find_by(slug: params[:id])
+    if article.update(article_params)
+      render '_article', locals: { article: article }
     else
       render json: { error: "Error: #{article.errors.full_messages.to_sentence}"}
     end
