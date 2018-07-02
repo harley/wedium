@@ -73,4 +73,18 @@ RSpec.describe 'ArticlesWithAuths', type: :request do
       expect(json['article']['favorited']).to eq true
     end
   end
+
+  describe 'DEL Unfavorite Article' do
+    it 'unfavorites how-to-train-your-dragon article' do
+      article = Article.create!(
+        user: user,
+        title: 'How to train your dragon',
+        description: 'Ever wonder how?',
+        body: 'Very carefully.'
+      )
+      article.favorite_by!(user)
+      delete '/articles/how-to-train-your-dragon/favorite', {}, valid_user_headers
+      expect(json['article']['favorited']).to eq false
+    end
+  end
 end

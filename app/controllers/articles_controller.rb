@@ -43,7 +43,13 @@ class ArticlesController < ApplicationController
 
   def favorite
     article = find_user_article
-    article.favorite_by!(current_user)
+
+    if request.post?
+      article.favorite_by!(current_user)
+    elsif request.delete?
+      article.unfavorite_by!(current_user)
+    end
+
     article.remember_favorited(current_user)
     render '_article', locals: { article: article }
   end

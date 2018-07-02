@@ -19,6 +19,10 @@ class Article < ActiveRecord::Base
     favorites.create!(user: user)
   end
 
+  def unfavorite_by!(user)
+    favorites.where(user: user).delete_all
+  end
+
   def remember_favorited(user)
     self.favorited = favorites.exists?(user: user) || false
   end
