@@ -13,45 +13,15 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    article = current_user.articles.build(article_params)
-    article.remember_favorited(current_user)
-    if article.save
-      render '_article', locals: { article: article }
-    else
-      render json: { error: "Error: #{article.errors.full_messages.to_sentence}"}
-    end
   end
 
   def update
-    article = current_user.articles.find_by(slug: params[:id])
-    if article.update(article_params)
-      render '_article', locals: { article: article }
-    else
-      render json: { error: "Error: #{article.errors.full_messages.to_sentence}"}
-    end
   end
 
   def destroy
-    article = current_user.articles.find_by(slug: params[:id])
-    if article
-      article.destroy
-      render json: { success: 'Article deleted.' }
-    else
-      render json: { error: 'Not found' }, status: 404
-    end
   end
 
   def favorite
-    article = find_user_article
-
-    if request.post?
-      article.favorite_by!(current_user)
-    elsif request.delete?
-      article.unfavorite_by!(current_user)
-    end
-
-    article.remember_favorited(current_user)
-    render '_article', locals: { article: article }
   end
 
   private
