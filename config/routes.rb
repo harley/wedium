@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   post 'users/login' => 'sessions#create'
 
   resources :users, only: [:create]
-  resources :articles
+  resources :articles do
+    post 'favorite', on: :member
+  end
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

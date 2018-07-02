@@ -5,6 +5,7 @@ class Article < ActiveRecord::Base
   extend Scopes
 
   validates :title, :slug, presence: true, allow_blank: false
+  attr_accessor :favorited
 
   def author
     user
@@ -12,6 +13,14 @@ class Article < ActiveRecord::Base
 
   def tag_list
     ["a", "b"]
+  end
+
+  def favorite_by!(user)
+    favorites.create!(user: user)
+  end
+
+  def remember_favorited(user)
+    self.favorited = favorites.exists?(user: user) || false
   end
 
   before_validation do
