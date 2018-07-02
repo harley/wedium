@@ -36,25 +36,4 @@ class UsersController < ApplicationController
     params.require(:user).permit(:email, :password, :username, :bio, :image)
   end
 
-  def current_user
-    @current_user ||= User.find(@current_user_id)
-  end
-
-  # docs https://apidock.com/rails/ActionController/HttpAuthentication/Token/ControllerMethods/authenticate_or_request_with_http_token
-  def authenticate_user
-    if request.headers['Authorization'].present?
-      # inspect headers
-      # p request.headers.select{ |key,val| key.starts_with?("HTTP_") }
-
-      authenticate_with_http_token do |token|
-        begin
-          jwt_payload = JWT.decode(token, Rails.application.secrets.secret_key_base).first
-          # p "JWT payload: #{jwt_payload}"
-          @current_user_id = jwt_payload['id']
-        rescue JWT::VerificationError => e
-          render json: {error: "Error: #{e.message}"}, status: 400
-        end
-      end
-    end
-  end
 end
