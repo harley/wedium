@@ -1,4 +1,6 @@
 class ArticlesController < ApplicationController
+  before_action :require_user, only: [:create, :destroy]
+
   def index
     @articles = Article.all
     @articles = @articles.authored_by(params[:author]) if params[:author]
@@ -10,12 +12,21 @@ class ArticlesController < ApplicationController
   end
 
   def create
-    authenticate_user
     article = current_user.articles.build(article_params)
     if article.save
       render 'create', locals: { article: article }
     else
       render json: { error: "Error: #{article.errors.full_messages.to_sentence}"}
+    end
+  end
+
+  def destroy
+    article = current_user.articles.find_by(slug: params[:id])
+    if article
+      article.destroy
+      render json: {success: 'Article deleted.'}
+    else
+      render json: {error: 'Not found'}, status: 404
     end
   end
 

@@ -35,4 +35,26 @@ RSpec.describe 'ArticlesWithAuths', type: :request do
       expect(article['favoritesCount']).to be_an(Integer)
     end
   end
+
+  describe 'DEL Delete Article' do
+    before do
+      @adam = User.create(username: 'adam', email: 'a@example.com', password: 'password')
+      @token = @adam.token
+      @valid_headers = {
+        'Authorization' => "Token #{@token}"
+      }
+    end
+
+    it 'deletes how-to-train-your-dragon article' do
+      Article.create!(
+        user: @adam,
+        title: 'How to train your dragon',
+        description: 'Ever wonder how?',
+        body: 'Very carefully.'
+      )
+      delete '/articles/how-to-train-your-dragon', {}, @valid_headers
+      expect(response).to have_http_status(200)
+      expect(Article.count).to eq 0
+    end
+  end
 end
